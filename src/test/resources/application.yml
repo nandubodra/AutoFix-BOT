@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:sitesentinel;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+  mail:
+    host:
+
+sitesentinel:
+  monitoring:
+    scheduler-delay-ms: 60000
+    claim-seconds: 60
+    thread-pool-size: 1
+  http:
+    max-redirects: 2
+    max-response-bytes: 8192
+  security:
+    login-window-seconds: 300
+    max-login-attempts: 5
+  app-base-url: http://localhost:8080

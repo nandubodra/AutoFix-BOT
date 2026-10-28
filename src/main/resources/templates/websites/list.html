@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Websites - SiteSentinel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-4">
+<a class="btn btn-link" th:href="@{/}">← Dashboard</a>
+<h1>Websites</h1>
+<form class="card card-body mb-4" method="post" th:action="@{/websites}" th:object="${form}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    <div class="row g-3">
+        <div class="col-md-4"><input class="form-control" th:field="*{name}" placeholder="Name"></div>
+        <div class="col-md-8"><input class="form-control" th:field="*{url}" placeholder="https://example.com"></div>
+        <div class="col-md-2"><input class="form-control" th:field="*{intervalSeconds}" placeholder="Interval sec"></div>
+        <div class="col-md-2"><input class="form-control" th:field="*{timeoutMs}" placeholder="Timeout ms"></div>
+        <div class="col-md-2"><input class="form-control" th:field="*{expectedStatuses}" placeholder="200,204"></div>
+        <div class="col-md-2"><input class="form-control" th:field="*{failureThreshold}" placeholder="Fail threshold"></div>
+        <div class="col-md-2"><input class="form-control" th:field="*{recoveryThreshold}" placeholder="Recovery threshold"></div>
+        <div class="col-md-2"><button class="btn btn-primary w-100" type="submit">Add</button></div>
+    </div>
+</form>
+<table class="table table-striped">
+    <thead><tr><th>Name</th><th>URL</th><th>Status</th><th>Verified</th><th>Actions</th></tr></thead>
+    <tbody>
+    <tr th:each="site : ${websites}">
+        <td><a th:href="@{|/websites/${site.id}|}" th:text="${site.name}"></a></td>
+        <td th:text="${site.normalizedUrl}"></td>
+        <td th:text="${site.status}"></td>
+        <td th:text="${site.verified}"></td>
+        <td>
+            <form th:if="${site.monitoringEnabled}" method="post" th:action="@{|/websites/${site.id}/pause|}" style="display:inline"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button class="btn btn-sm btn-warning" type="submit">Pause</button></form>
+            <form th:unless="${site.monitoringEnabled}" method="post" th:action="@{|/websites/${site.id}/resume|}" style="display:inline"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button class="btn btn-sm btn-success" type="submit">Resume</button></form>
+            <form method="post" th:action="@{|/websites/${site.id}/delete|}" style="display:inline"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button class="btn btn-sm btn-danger" type="submit">Delete</button></form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
